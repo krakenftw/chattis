@@ -1,0 +1,79 @@
+import { Avatar, Box, Button, Spinner, Text } from "@chakra-ui/react";
+import React, { useState } from "react";
+import { useChatState } from "../../context/ChatProvider";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
+import ProfileModal from "../misc/ProfileModal";
+import SingleChat from "./SingleChat";
+
+function ChatBox() {
+  const { selectedChat, user } = useChatState();
+
+  return (
+    <>
+      <Box
+        w='100%'
+        m='0 0 0 7px'
+        backgroundColor='white'
+        h='100%'
+        borderRadius='lg'
+      >
+        {selectedChat ? (
+          <Box w='100%' height={"100%"}>
+            <Box
+              backgroundColor=''
+              p='5px'
+              border={"1px solid black"}
+              borderRadius={"lg"}
+              width={"100%"}
+              display={"flex"}
+              justifyContent={"space-between"}
+              alignItems={"center"}
+              padding={"7px"}
+            >
+              <Box display={"flex"} alignItems={"center"}>
+                <Avatar
+                  src={
+                    !selectedChat.isGroupChat &&
+                    selectedChat.users[1].profilePic
+                  }
+                  name={
+                    selectedChat.isGroupChat
+                      ? selectedChat.chatName
+                      : selectedChat.users[1].name
+                  }
+                />
+                <Text m='5px' fontSize={"lg"}>
+                  {selectedChat.isGroupChat
+                    ? selectedChat.chatName
+                    : selectedChat.users[1].name}
+                </Text>
+              </Box>
+              {!selectedChat.isGroupChat && (
+                <ProfileModal user={selectedChat.users[1]}>
+                  <Button>
+                    <FontAwesomeIcon size='lg' icon={faEye} />
+                  </Button>
+                </ProfileModal>
+              )}
+            </Box>
+            <SingleChat />
+          </Box>
+        ) : (
+          <Box
+            w='100%'
+            h='100%'
+            display='flex'
+            justifyContent={"center"}
+            alignItems={"center"}
+            fontSize={"2xl"}
+          >
+            Click on a user to start chatting
+          </Box>
+        )}
+      </Box>
+    </>
+  );
+}
+
+export default ChatBox;

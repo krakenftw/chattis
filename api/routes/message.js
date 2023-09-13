@@ -1,26 +1,11 @@
 import express from 'express';
 import { messageModel } from '../schema/message.js';
 const messageRoutes = express.Router();
+import { protect } from '../middlewares/authMiddleware.js';
+import { handleGetMessages, handleMessageSend } from '../controllers/messageControllers.js';
 
-messageRoutes.get("/messages", async (req, res) => {
-    try {
-        const messageResult = await messageModel.find({});
-        return res.json(messageResult).status(200);
-    } catch (err) {
-        console.log(err);
-        res.json(err);
-    }
-})
-messageRoutes.post("/messages", async (req, res) => {
-    try {
-        const data = req.body;
-        const newMessage = new messageModel({ name: data.name, message: data.message })
-        const savedMessage = await newMessage.save();
-        return res.json(savedMessage).status(200);
-    } catch (err) {
-        console.log(err);
-        res.json(err);
-    }
-})
+
+messageRoutes.get("/:chatId", protect, handleGetMessages)
+messageRoutes.post("/", protect, handleMessageSend)
 
 export default messageRoutes;
