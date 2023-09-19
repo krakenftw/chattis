@@ -1,9 +1,10 @@
 import { Box, Button, Input, Spinner, Text } from "@chakra-ui/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { Send } from "lucide-react";
 import axios from "axios";
 import { useChatState } from "../../context/ChatProvider";
+import EachMessage from "./EachMessage";
+import { socket } from "../../socket";
 
 function SingleChat() {
   const { selectedChat, user } = useChatState();
@@ -17,7 +18,7 @@ function SingleChat() {
   };
   const handleMessageSend = () => {
     if (!content) return;
-
+    socket.emit("chat", { message: content });
     axios
       .post(
         "http://localhost:4000/messages",
@@ -27,27 +28,32 @@ function SingleChat() {
         },
         config
       )
-      .then((res) => {
-        console.log(res.data);
-      })
+      .then((res) => {})
       .catch((err) => {
         console.log("Error", err);
       });
+    setContent("");
   };
-  useEffect(() => {
+  const fetchMessages = async () => {
+    if (!selectedChat) return;
     setLoading(true);
     axios
       .get(
-        `https://localhost:4000/messages/chatId="64ec1b48fe946ce1f70c240b"`
+        `http://localhost:4000/messages/${selectedChat._id}`,
+        config
       )
       .then((res) => {
-        console.log(res.data);
+        setMessages(res.data);
+
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
+        console.log("Error", err);
         setLoading(false);
       });
+  };
+  useEffect(() => {
+    fetchMessages();
   }, [selectedChat]);
   return (
     <Box
@@ -60,7 +66,12 @@ function SingleChat() {
       {loading && (
         <Spinner alignSelf={"center"} margin={"auto"} size={"xl"} />
       )}
-      <Box></Box>
+      <Box overflow={"scroll"} padding={"10px 10px"}>
+        {messages &&
+          messages.map((each) => (
+            <EachMessage key={each._id} message={each} />
+          ))}
+      </Box>
       <Box
         display={"flex"}
         justifyContent={"center"}
@@ -73,6 +84,7 @@ function SingleChat() {
           borderBottomEndRadius={"0px"}
           borderTopEndRadius={"0px"}
           placeholder='Dont Curse!'
+          value={content}
           onChange={(e) => {
             setContent(e.target.value);
           }}

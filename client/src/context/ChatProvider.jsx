@@ -18,11 +18,9 @@ const ChatProvider = ({ children }) => {
 
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-    console.log("userInfo", userInfo);
     if (!userInfo) return navigate("/homepage");
     const decoded = jwt_decode(userInfo.token);
     if (decoded.exp * 1000 < Date.now()) {
-      console.log("expired");
       navigate("/homepage");
     }
     setUser(userInfo);

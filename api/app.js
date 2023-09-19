@@ -2,7 +2,6 @@ import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser'
-import { messageModel } from './schema/message.js';
 import messageRoutes from './routes/message.js';
 import http from 'http';
 import { Server } from 'socket.io'
@@ -16,10 +15,15 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 const server = http.createServer(app)
 const io = new Server(server, {
+    pingTimeout: 60000,
     cors: {
         origin: "http://localhost:5173"
     }
-})
+});
+
+
+
+
 
 app.use(cors());
 
@@ -35,22 +39,22 @@ const handleUserJoin = () => {
 }
 
 io.on('connection', (socket) => {
+
     socket.on('new-user-joined', () => {
         socket.broadcast.emit("New user joined")
     })
     socket.on("chat", (data) => {
-        console.log(data.message)
+        console.log("Chat Received : ", data.message)
     })
 });
+
+
 
 function main() {
     mongoose.connect(process.env.MONGO_URI);
 }
 
-
 mongoose.connect(process.env.MONGO_URI);
-
-
 
 const port = process.env.PORT || 3500;
 

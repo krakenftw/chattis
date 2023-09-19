@@ -1,14 +1,18 @@
 import { Avatar, Box, Button, Spinner, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { useChatState } from "../../context/ChatProvider";
+import { useChatState } from "../../context/ChatProvider.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import ProfileModal from "../misc/ProfileModal";
 import SingleChat from "./SingleChat";
+import { getOtherUser } from "../../lib/chatLogics";
 
 function ChatBox() {
   const { selectedChat, user } = useChatState();
-
+  let otherUser;
+  if (selectedChat) {
+    otherUser = getOtherUser(user, selectedChat.users);
+  }
   return (
     <>
       <Box
@@ -34,13 +38,12 @@ function ChatBox() {
               <Box display={"flex"} alignItems={"center"}>
                 <Avatar
                   src={
-                    !selectedChat.isGroupChat &&
-                    selectedChat.users[1].profilePic
+                    !selectedChat.isGroupChat && otherUser.profilePic
                   }
                   name={
                     selectedChat.isGroupChat
                       ? selectedChat.chatName
-                      : selectedChat.users[1].name
+                      : "hi"
                   }
                 />
                 <Text m='5px' fontSize={"lg"}>

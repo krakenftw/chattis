@@ -73,7 +73,6 @@ function SideBar() {
         )
         .then((res) => {
           SetSearchResult(res.data);
-
           SetLoading(false);
         })
         .catch((err) => {
@@ -90,6 +89,8 @@ function SideBar() {
     }
   };
   const handleUserChat = (newUser) => {
+    console.log(chats, newUser);
+
     SetLoadingChats(true);
     const config = {
       headers: {

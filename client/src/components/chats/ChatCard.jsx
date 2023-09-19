@@ -1,7 +1,10 @@
 import { Avatar, Box, Text } from "@chakra-ui/react";
 import React from "react";
+import { useChatState } from "../../context/ChatProvider";
+import { getOtherUser } from "../../lib/chatLogics";
 
 function ChatCard({ chat, handleChatClick }) {
+  const { user } = useChatState();
   return (
     <Box
       display={"flex"}
@@ -19,7 +22,10 @@ function ChatCard({ chat, handleChatClick }) {
       <Avatar
         size={"md"}
         m='0px 7px 0 0'
-        src={!chat.isGroupChat && chat.users[1].profilePic}
+        src={
+          !chat.isGroupChat &&
+          getOtherUser(user, chat.users).profilePic
+        }
         name={chat.isGroupChat ? chat.chatName : chat.users[1].name}
       />
       <Text>

@@ -1,19 +1,14 @@
-import {
-  Box,
-  Button,
-  Container,
-  Input,
-  Text,
-  useToast,
-} from "@chakra-ui/react";
+import { Box, Button, Input, Text, useToast } from "@chakra-ui/react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
+import { useChatState } from "../context/ChatProvider";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const { setUser, user } = useChatState();
   const navigate = useNavigate();
   const toast = useToast();
   const handleLogin = () => {
@@ -26,6 +21,7 @@ const Login = () => {
       .then((res) => {
         toast({ status: "success", description: "Logged In!" });
         localStorage.setItem("userInfo", JSON.stringify(res.data));
+        setUser(res.data);
         return navigate("/chats");
       })
       .catch((err) => {

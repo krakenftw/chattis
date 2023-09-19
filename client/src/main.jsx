@@ -12,15 +12,15 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <ChatProvider>
       <ChakraProvider>
-        <div className="cover">
+        <div className='cover'>
           <Routes>
-            <Route path="/" element={<App />} />
-            <Route path="/homepage" element={<Homepage />} />
-            <Route path="/chats" element={<Chat />} />
-            <Route path="/auth" element={<App />} />
+            <Route path='/' element={<App />} />
+            <Route path='/homepage' element={<Homepage />} />
+            <Route path='/chats' element={<Chat />} />
+            <Route path='/auth' element={<App />} />
           </Routes>
         </div>
       </ChakraProvider>
     </ChatProvider>
-  </BrowserRouter>,
+  </BrowserRouter>
 );

@@ -2,18 +2,20 @@ import { messageModel } from "../schema/message.js";
 
 
 export const handleGetMessages = async (req, res) => {
-    const user = req.user;
+    const { chatId } = req.params;
+    if (!chatId) {
+        return res.status(400).json({ error: "No chat Id Provided" })
+    }
     try {
-        const messages = await messageModel.find({ chat: req.params.chatId });
+        const messages = await messageModel.find({ chat: req.params.chatId }).populate("sender", "-password");
         res.json(messages);
 
     } catch (err) {
+        console.log("Error fetching messages:", err);
         res.status(301).json({ err });
-        console.log(err);
     }
 }
 export const handleMessageSend = async (req, res) => {
-    console.log("aya")
     const { content, chatId } = req.body;
     if (!content || !chatId) {
         return res.status(402).json({ error: "all fields required." })
