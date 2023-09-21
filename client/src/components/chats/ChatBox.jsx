@@ -16,6 +16,9 @@ function ChatBox() {
   return (
     <>
       <Box
+        display={{
+          display: selectedChat ? "flex" : "none",
+        }}
         w='100%'
         m='0 0 0 7px'
         backgroundColor='white'

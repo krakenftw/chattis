@@ -14,7 +14,7 @@ const Login = () => {
   const handleLogin = () => {
     setLoading(true);
     axios
-      .post("http://localhost:4000/user/login", {
+      .post("/api/user/login", {
         username,
         password,
       })
@@ -28,7 +28,7 @@ const Login = () => {
         console.log(err);
         toast({
           status: "error",
-          description: err.response.data.error,
+          description: "An error occurred",
         });
         setLoading(false);
         setUsername("");

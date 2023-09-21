@@ -37,9 +37,8 @@ function MyChats() {
   const handleGroupCreate = () => {};
   const fetchChats = () => {
     axios
-      .get("http://localhost:4000/chat/get", config)
+      .get("/api/chat/get", config)
       .then((res) => {
-        console.log(res.data.chats);
         setChats(res.data.chats);
       })
       .catch((err) => {
@@ -56,7 +55,11 @@ function MyChats() {
   return (
     <>
       <Box
-        display={{ base: selectedChat ? "none" : "flex", md: "flex" }}
+        display={{
+          base: selectedChat ? "none" : "flex",
+          md: "flex",
+          sm: "none",
+        }}
         flexDirection='column'
         w={{ base: "100%", md: "31%" }}
         m='0'

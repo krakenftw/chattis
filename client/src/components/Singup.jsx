@@ -45,7 +45,7 @@ const Singup = () => {
     } else {
       setPasswordMatch(true);
       axios
-        .post("http://localhost:4000/user/register", {
+        .post("api/user/register", {
           name,
           email,
           username: username,

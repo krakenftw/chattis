@@ -67,10 +67,7 @@ function SideBar() {
         },
       };
       axios
-        .get(
-          `http://localhost:4000/user/search?search=${search}`,
-          config
-        )
+        .get(`/api/user/search?search=${search}`, config)
         .then((res) => {
           SetSearchResult(res.data);
           SetLoading(false);
@@ -89,8 +86,6 @@ function SideBar() {
     }
   };
   const handleUserChat = (newUser) => {
-    console.log(chats, newUser);
-
     SetLoadingChats(true);
     const config = {
       headers: {
@@ -98,11 +93,7 @@ function SideBar() {
       },
     };
     axios
-      .post(
-        "http://localhost:4000/chat/create",
-        { userId: newUser._id },
-        config
-      )
+      .post("/api/chat/create", { userId: newUser._id }, config)
       .then((res) => {
         setSelectedChat(res.data);
         console.log(chats.find((each) => each._id == res.data._id));

@@ -22,21 +22,13 @@ import UserListSystem from "./UserListSystem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
-function CreateGroupModal({
-  onOpen,
-  isOpen,
-  onClose,
-}) {
-  const [groupChatName, setGroupChatName] =
-    useState();
-  const [groupUsers, setGroupUsers] = useState(
-    []
-  );
+function CreateGroupModal({ onOpen, isOpen, onClose }) {
+  const [groupChatName, setGroupChatName] = useState();
+  const [groupUsers, setGroupUsers] = useState([]);
   const [search, setSearch] = useState();
-  const [searchResult, setSearchResult] =
-    useState();
+  const [searchResult, setSearchResult] = useState();
   const [loading, setLoading] = useState();
-  const { user, setChats, chats, selectedChat } =
+  const { user, setChats, chats, selectedChat, setSelectedChat } =
     useChatState();
   const toast = useToast();
   const config = {
@@ -49,10 +41,7 @@ function CreateGroupModal({
     if (!e.target.value) return;
     setLoading(true);
     axios
-      .get(
-        `http://localhost:4000/user/search?search=${e.target.value}`,
-        config
-      )
+      .get(`/api/user/search?search=${e.target.value}`, config)
       .then((res) => {
         setSearchResult(res.data);
         setLoading(false);
@@ -65,22 +54,13 @@ function CreateGroupModal({
 
   function handleUserAdd(each) {
     if (groupUsers.includes(each)) return;
-    setGroupUsers((groupUsers) => [
-      ...groupUsers,
-      each,
-    ]);
+    setGroupUsers((groupUsers) => [...groupUsers, each]);
   }
 
-  const handleUserRemoveList = (
-    userIdToRemove
-  ) => {
-    console.log(userIdToRemove);
+  const handleUserRemoveList = (userIdToRemove) => {
     setGroupUsers(
-      groupUsers.filter(
-        (item) => item._id !== userIdToRemove
-      )
+      groupUsers.filter((item) => item._id !== userIdToRemove)
     );
-    console.log(groupUsers);
   };
 
   const handleGroupCreate = () => {
@@ -94,10 +74,9 @@ function CreateGroupModal({
       });
     }
 
-    console.log(config);
     axios
       .post(
-        "http://localhost:4000/chat/createGroup",
+        "/api/chat/createGroup",
         {
           name: groupChatName,
           users: groupUsers,
@@ -106,18 +85,16 @@ function CreateGroupModal({
       )
       .then((res) => {
         setChats((chats) => [...chats, res.data]);
-        selectedChat(res.data);
+        setSelectedChat(res.data);
+        onClose();
       })
       .catch((err) => console.log(res));
-    console.log(chats);
   };
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>
-          Create Group Chat
-        </ModalHeader>
+        <ModalHeader>Create Group Chat</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Text>Name:</Text>
@@ -142,15 +119,11 @@ function CreateGroupModal({
                   handleUserRemoveList(each._id);
                 }}
               >
-                {each.name}{" "}
-                <FontAwesomeIcon icon={faXmark} />
+                {each.name} <FontAwesomeIcon icon={faXmark} />
               </Badge>
             ))}
           </Box>
-          <Stack
-            overflow='scroll'
-            maxHeight='40vh'
-          >
+          <Stack overflow='scroll' maxHeight='40vh'>
             {loading
               ? "Loading..."
               : searchResult?.map((each) => (
@@ -185,12 +158,10 @@ function CreateGroupModal({
                       />
                       <Box>
                         <Text fontSize='sm'>
-                          <b>Name : </b>{" "}
-                          {each.name}
+                          <b>Name : </b> {each.name}
                         </Text>
                         <Text fontSize='sm'>
-                          <b>Email :</b>{" "}
-                          {each.email}
+                          <b>Email :</b> {each.email}
                         </Text>
                       </Box>
                     </Stack>
@@ -200,17 +171,10 @@ function CreateGroupModal({
         </ModalBody>
 
         <ModalFooter>
-          <Button
-            variant='ghost'
-            mr={3}
-            onClick={onClose}
-          >
+          <Button variant='ghost' mr={3} onClick={onClose}>
             Cancel
           </Button>
-          <Button
-            colorScheme='green'
-            onClick={handleGroupCreate}
-          >
+          <Button colorScheme='green' onClick={handleGroupCreate}>
             Create
           </Button>
         </ModalFooter>

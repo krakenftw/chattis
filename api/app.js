@@ -17,7 +17,7 @@ const server = http.createServer(app)
 const io = new Server(server, {
     pingTimeout: 60000,
     cors: {
-        origin: "http://localhost:5173"
+        origin: "*"
     }
 });
 
@@ -29,22 +29,23 @@ app.use(cors());
 
 dotenv.config();
 
-app.use("", messageRoutes);
-app.use("/user", userRoutes)
-app.use("/messages", messageRoutes)
-app.use("/chat", chatRoutes)
+app.use("/api/", messageRoutes);
+app.use("/api/user", userRoutes)
+app.use("/api/messages", messageRoutes)
+app.use("/api/chat", chatRoutes)
 
-const handleUserJoin = () => {
-    console.log("New user joined")
-}
 
 io.on('connection', (socket) => {
+    socket.on("new-message", (data) => {
+        io.to(data.chat._id).emit("message-received", data);
+    });
 
-    socket.on('new-user-joined', () => {
-        socket.broadcast.emit("New user joined")
+    socket.on('join-chat', (room) => {
+        console.log("user joined room")
+        socket.join(room);
     })
-    socket.on("chat", (data) => {
-        console.log("Chat Received : ", data.message)
+    socket.on("userTyping", (room) => {
+        socket.to(room).emit("SomeOneTyping")
     })
 });
 

@@ -19,7 +19,6 @@ export const createChat = async (req, res) => {
     }).populate("users", "-password")
         .populate("latestMessage");
 
-    console.log(isChat)
 
     isChat = await userModel.populate(isChat, {
         path: 'latestMessage.sender',
@@ -28,7 +27,6 @@ export const createChat = async (req, res) => {
     if (isChat.length > 0) {
         res.json(isChat[0]);
     } else {
-        console.log(req.user)
         var chatData = {
             chatName: "sender",
             isGroupChat: false,
@@ -70,7 +68,6 @@ export const renameGroup = async (req, res) => {
 
     const group = await chatModel.findOne({ _id: groupId });
 
-    console.log(group)
     if (group) {
         try {
 

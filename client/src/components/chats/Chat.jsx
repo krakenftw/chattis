@@ -12,7 +12,6 @@ function Chat() {
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [fooEvents, setFooEvents] = useState([]);
 
-  console.log("socket", isConnected);
   useEffect(() => {
     function onConnect() {
       setIsConnected(true);
@@ -29,7 +28,6 @@ function Chat() {
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
     socket.on("foo", onFooEvent);
-    socket.emit("chat", { message: "smxx" });
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
@@ -58,7 +56,6 @@ function Chat() {
 
   return (
     <>
-      <h1>{isConnected ? "🟢" : "🔴"}</h1>
       {user && <SideBar />}
       <Box
         display='flex'
