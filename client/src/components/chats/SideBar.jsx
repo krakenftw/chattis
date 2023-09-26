@@ -43,6 +43,7 @@ function SideBar() {
   const [search, SetSearch] = useState();
   const [searchResult, SetSearchResult] = useState();
   const [loading, SetLoading] = useState(false);
+  const [loadingUserChat, setLoadingUserChat] = useState();
   const [loadingChats, SetLoadingChats] = useState();
   const { user, setSelectedChat, selectedChat, setChats, chats } =
     useChatState();
@@ -87,6 +88,7 @@ function SideBar() {
   };
   const handleUserChat = (newUser) => {
     SetLoadingChats(true);
+    setLoadingUserChat(true);
     const config = {
       headers: {
         Authorization: `Bearer ${user.token}`,
@@ -98,11 +100,11 @@ function SideBar() {
         setSelectedChat(res.data);
         console.log(chats.find((each) => each._id == res.data._id));
         setChats((chats) => [...chats, res.data]);
-        SetLoadingChats(false);
+        setLoadingUserChat(false);
       })
       .catch((err) => {
         console.log(err);
-        SetLoadingChats(false);
+        setLoadingUserChat(false);
         toast({ description: "An error occurred", status: "error" });
       });
   };
@@ -128,7 +130,6 @@ function SideBar() {
             </Text>
           </Button>
         </Tooltip>
-        <Text fontSize='2xl'>CHATTIS</Text>
         <Box display='flex'>
           <Menu>
             <MenuButton w='30px' alignItems='center'>
@@ -201,6 +202,22 @@ function SideBar() {
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
+      {loadingUserChat && (
+        <Box
+          position={"absolute"}
+          top={"0px"}
+          zIndex={"9999"}
+          display={"flex"}
+          height={"100vh"}
+          backgroundColor={"black"}
+          width={"100%"}
+          opacity={"70%"}
+          alignItems={"center"}
+          justifyContent={"center"}
+        >
+          <Spinner color='white' size={"xl"} />
+        </Box>
+      )}
     </div>
   );
 }

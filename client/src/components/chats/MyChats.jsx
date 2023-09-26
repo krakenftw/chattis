@@ -1,15 +1,6 @@
 import {
   Box,
   Button,
-  Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Spinner,
   Stack,
   Text,
   useDisclosure,
@@ -50,7 +41,9 @@ function MyChats() {
     setSelectedChat(chat);
   };
   useEffect(() => {
+    setLoading(true);
     fetchChats();
+    setLoading(false);
   }, []);
   return (
     <>
@@ -73,11 +66,10 @@ function MyChats() {
           alignItems='center'
           m='10px 0px 20px 0px'
         >
-          <Text fontSize='2xl'>Chats</Text>
-          <Button onClick={onOpen}>New Chat</Button>
+          <Button onClick={onOpen}>New Group Chat</Button>
         </Box>
         <Box display='flex' flexDirection='column'>
-          {chats ? (
+          {!loading ? (
             <Stack overflowY='scroll'>
               {chats?.map((chat) => (
                 <ChatCard

@@ -22,7 +22,7 @@ function SingleChat() {
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState();
   const [typing, setTyping] = useState(false);
-  const chatBoxRef = useRef();
+  const chatBoxRef = useRef(null);
   const config = {
     headers: {
       Authorization: `Bearer ${user.token}`,
@@ -33,7 +33,8 @@ function SingleChat() {
     setTyping(false);
   };
   const scrollToBottom = () => {
-    chatBoxRef.current?.scrollIntoView();
+    console.log(chatBoxRef);
+    chatBoxRef.current?.scrollIntoView({ behavior: "smooth" });
   };
   const handleMessageSend = () => {
     setTyping(false);
@@ -69,6 +70,7 @@ function SingleChat() {
         setMessages(res.data);
         socket.emit("join-chat", selectedChat._id);
         setLoading(false);
+        scrollToBottom();
       })
       .catch((err) => {
         console.log("Error", err);
@@ -81,7 +83,6 @@ function SingleChat() {
   };
   useEffect(() => {
     fetchMessages();
-    scrollToBottom();
   }, [selectedChat]);
   useEffect(() => {
     socket.on("message-received", (data) => {
@@ -90,6 +91,7 @@ function SingleChat() {
     });
     socket.on("SomeOneTyping", () => {
       setTyping(true);
+      scrollToBottom();
       setTimeout(clearTyping, 2000);
     });
     return () => {
@@ -114,12 +116,12 @@ function SingleChat() {
             <EachMessage key={each._id} message={each} />
           ))}
         {typing && (
-          <Box margin={"10px 20px"}>
+          <Box>
             <LeapFrog size={40} speed={1.8} />
           </Box>
         )}
       </Box>
-      <div ref={chatBoxRef}></div>
+
       <Box
         display={"flex"}
         justifyContent={"center"}
