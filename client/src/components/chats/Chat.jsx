@@ -8,7 +8,6 @@ import SideBar from "./SideBar.jsx";
 import { socket } from "../../socket.js";
 
 function Chat() {
-  // const [chats, setChats] = useState(["bdhsfs", "sjbdg", "dsgsd"]);
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [fooEvents, setFooEvents] = useState([]);
 
@@ -35,24 +34,6 @@ function Chat() {
     };
   }, []);
   const { user } = useChatState();
-  // const getUserChats = async () => {
-  //     const headers = {
-  //         Authorization: `Bearer ${user.token}`
-  //     }
-  //     axios.get("http://localhost:4000/chat/get", {
-  //         userId: user._id,
-  //         headers: headers
-  //     }).then((res) => {
-  //         console.log(res);
-  //         setChats(res.data)
-  //     })
-  //         .catch((err) => {
-  //             console.log(err);
-  //         })
-  // }
-  // useEffect(() => {
-  //     getUserChats();
-  // }, [])
 
   return (
     <>
